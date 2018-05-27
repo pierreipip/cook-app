@@ -2,28 +2,27 @@ package myspring.springframework.cookapp.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 @Entity
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY  )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String description;
-    private Integer preTime;
+    private Integer prepTime;
     private Integer cookTime;
     private Integer servings;
     private String source;
     private String url;
 
+    @Lob
     private String directions;
 
-    //private Difficulty difficulty;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredients;
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
     private Byte[] image;
@@ -56,12 +55,12 @@ public class Recipe {
         this.description = description;
     }
 
-    public Integer getPreTime() {
-        return preTime;
+    public Integer getPrepTime() {
+        return prepTime;
     }
 
-    public void setPreTime(Integer preTime) {
-        this.preTime = preTime;
+    public void setPrepTime(Integer prepTime) {
+        this.prepTime = prepTime;
     }
 
     public Integer getCookTime() {
@@ -112,20 +111,19 @@ public class Recipe {
         this.image = image;
     }
 
-    public Difficulty getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
     public Notes getNotes() {
         return notes;
     }
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
+    }
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
     }
 
     public Set<Ingredient> getIngredients() {
@@ -136,5 +134,19 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
 
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
 }
